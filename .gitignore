@@ -1,0 +1,6 @@
+*.o
+*.efi
+.vscode
+*.lib
+*.fd
+gnu-efi*
