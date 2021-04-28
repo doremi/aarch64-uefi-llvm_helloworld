@@ -1,9 +1,9 @@
 CC=clang
-LD=lld-link
+LD=ld.lld
 
 LLVM_TARGET=-target aarch64-pc-win32-coff
 SYSROOT=$(HOME)/opt/llvm/aarch64-none-eabi
-EFI_INCLUDE=$(SYSROOT)/include/efi/
+EFI_INCLUDE=/usr/include/efi/
 
 CFLAGS=$(LLVM_TARGET)
 CFLAGS+=-fno-stack-protector -fshort-wchar 
@@ -22,4 +22,7 @@ all: main.efi
 	$(CC) $(CFLAGS) -c $< -o $@
 
 main.efi: main.o
-	$(LD) $(LDFLAGS) $^ -out:$@
+	clang -target aarch64-pc-win32-coff -Wl,-subsystem:efi_application -Wl,-entry:efi_main -nodefaultlibs -nostdlib -fuse-ld=lld-link $^ -o $@
+
+clean:
+	rm -rf *.o main.efi
